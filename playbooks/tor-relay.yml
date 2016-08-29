@@ -1,0 +1,69 @@
+---
+- name: Deploy a TOR relay
+  hosts: torserver
+  vars:
+    nick_name: "TorRelayNickname"
+    full_name: "John Doe"
+    email_address: "john@doe.com"
+    tor_user: "debian-tor"
+  tasks:
+    - name: Install gnupg package
+      apt: name='gnupg' state='latest' update_cache='yes'
+      sudo: True
+
+    - name: Add apt key
+      apt_key: keyserver=keys.gnupg.net id=886DDD89 state=present
+
+    - name: Setup TOR apt repo
+      apt_repository: >
+       repo='deb http://deb.torproject.org/torproject.org {{ ansible_lsb.codename }} main'
+       state=present
+       update_cache=yes
+
+    - name: Install TOR package
+      apt: name='tor' state='latest' update_cache='yes'
+
+    - name: put Tor config file in place
+      template: >
+        src=torrc.j2
+        dest=/etc/tor/torrc
+        backup=yes
+        owner={{ tor_user }}
+        mode=0644
+      register: tor_conf
+      tags:
+        - configure
+        - files
+
+    - name: create/ensure correct directory permissions
+      file: >
+        path={{ item }}
+        recurse=yes
+        state=directory
+        owner={{ tor_user }}
+        group={{ tor_user }}
+        mode=0750
+      with_items:
+        -  /var/log/tor
+        -  /var/lib/tor
+      tags:
+        - configure
+        - dirs
+
+    - name: start Tor service if not yet running
+      service: >
+        name=tor
+        state=started
+        enabled=yes
+      tags:
+        - configure
+        - service
+
+    - name: restart Tor service if Tor config was changed
+      service: >
+        name=tor
+        state=reloaded
+      when: tor_conf.changed == True
+      tags:
+        - configure
+        - service

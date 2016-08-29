@@ -1,0 +1,33 @@
+# Log basic notices
+Log notice file /var/log/tor/notices.log
+
+# Run in the background
+RunAsDaemon 1
+
+# Where to store keys
+DataDirectory /var/lib/tor
+
+# Required: what port to advertise for incoming Tor connections.
+ORPort 9001
+
+Nickname {{ nick_name }}
+
+# Cap bandwidth
+RelayBandwidthRate 2500 KB
+RelayBandwidthBurst 3000 KB
+
+#This is on a monthly basis
+AccountingMax 500 GB
+
+# This should be set to day/time initially run, with "month" indicating monthly accounting
+AccountingStart month 1 00:00
+
+ContactInfo {{ full_name }} <{{ email_address }}>
+
+# Mirror directory information on this port
+DirPort 9030
+
+# No exits allowed
+ExitPolicy reject *:*
+
+# config changed
