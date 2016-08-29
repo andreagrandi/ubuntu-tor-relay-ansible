@@ -31,9 +31,6 @@
         owner={{ tor_user }}
         mode=0644
       register: tor_conf
-      tags:
-        - configure
-        - files
 
     - name: create/ensure correct directory permissions
       file: >
@@ -46,24 +43,15 @@
       with_items:
         -  /var/log/tor
         -  /var/lib/tor
-      tags:
-        - configure
-        - dirs
 
     - name: start Tor service if not yet running
       service: >
         name=tor
         state=started
         enabled=yes
-      tags:
-        - configure
-        - service
 
     - name: restart Tor service if Tor config was changed
       service: >
         name=tor
         state=reloaded
       when: tor_conf.changed == True
-      tags:
-        - configure
-        - service
