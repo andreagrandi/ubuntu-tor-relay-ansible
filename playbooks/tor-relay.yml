@@ -6,6 +6,12 @@
     full_name: "John Doe"
     email_address: "john@doe.com"
     tor_user: "debian-tor"
+    tor_orport: 9001
+    tor_relay_bandwidth_rate: "2500 KB"
+    tor_relay_bandwidth_burst: "3000 KB"
+    tor_accounting_max: "500 GB"
+    tor_accounting_start: "month 1 00:00"
+    tor_dir_port: 9030
   tasks:
     - name: Install gnupg package
       apt: name='gnupg' state='latest' update_cache='yes'

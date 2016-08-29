@@ -8,24 +8,24 @@ RunAsDaemon 1
 DataDirectory /var/lib/tor
 
 # Required: what port to advertise for incoming Tor connections.
-ORPort 9001
+ORPort {{ tor_orport }}
 
 Nickname {{ nick_name }}
 
 # Cap bandwidth
-RelayBandwidthRate 2500 KB
-RelayBandwidthBurst 3000 KB
+RelayBandwidthRate {{ tor_relay_bandwidth_rate }}
+RelayBandwidthBurst {{ tor_relay_bandwidth_burst }}
 
 #This is on a monthly basis
-AccountingMax 500 GB
+AccountingMax {{ tor_accounting_max }}
 
 # This should be set to day/time initially run, with "month" indicating monthly accounting
-AccountingStart month 1 00:00
+AccountingStart {{ tor_accounting_start }}
 
 ContactInfo {{ full_name }} <{{ email_address }}>
 
 # Mirror directory information on this port
-DirPort 9030
+DirPort {{ tor_dir_port }}
 
 # No exits allowed
 ExitPolicy reject *:*
