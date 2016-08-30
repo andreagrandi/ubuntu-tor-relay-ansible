@@ -1,6 +1,6 @@
 ---
 - name: Deploy a TOR relay
-  hosts: torserver
+  hosts: all
   vars:
     nick_name: "TorRelayNickname"
     full_name: "John Doe"
