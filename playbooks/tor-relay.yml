@@ -29,8 +29,11 @@
       become: True
 
     - name: Install TOR package
-      apt: name='tor' state='latest' update_cache='yes'
+      apt: pkg={{ item }} state='latest' update_cache='yes'
       become: True
+      with_items:
+        - tor
+        - tor-arm
 
     - name: put Tor config file in place
       template: >
